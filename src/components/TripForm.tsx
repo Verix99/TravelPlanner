@@ -9,10 +9,10 @@ import {
   InputLabel,
   Grid,
 } from "@mui/material";
+import { translations, Language } from "../translations";
 
 interface TripPreferences {
   budget: number;
-  activityLevel: "relaxed" | "moderate" | "active";
   interests: string[];
   travelStyle: "budget" | "comfort" | "luxury";
   season: "spring" | "summer" | "autumn" | "winter";
@@ -24,42 +24,15 @@ interface TripFormProps {
     days: number;
     preferences: TripPreferences;
   }) => void;
+  language: Language;
 }
 
-const FORM_OPTIONS = {
-  activityLevels: [
-    { value: "relaxed", label: "Relaxační" },
-    { value: "moderate", label: "Střední" },
-    { value: "active", label: "Aktivní" },
-  ],
-  interests: [
-    { value: "culture", label: "Kultura a historie" },
-    { value: "food", label: "Gastronomie" },
-    { value: "nature", label: "Příroda" },
-    { value: "shopping", label: "Nakupování" },
-    { value: "sport", label: "Sport" },
-    { value: "relax", label: "Wellness" },
-  ],
-  travelStyles: [
-    { value: "budget", label: "Nízkonákladový" },
-    { value: "comfort", label: "Standardní" },
-    { value: "luxury", label: "Luxusní" },
-  ],
-  seasons: [
-    { value: "spring", label: "Jaro" },
-    { value: "summer", label: "Léto" },
-    { value: "autumn", label: "Podzim" },
-    { value: "winter", label: "Zima" },
-  ],
-} as const;
-
-const TripForm = ({ onSubmit }: TripFormProps) => {
+const TripForm = ({ onSubmit, language }: TripFormProps) => {
+  const t = translations[language];
   const [formData, setFormData] = useState({
     destination: "",
     days: 1,
     preferences: {
-      budget: 5000,
-      activityLevel: "moderate",
       interests: [] as string[],
       travelStyle: "comfort",
       season: "summer",
@@ -92,7 +65,7 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
           <Grid item xs={12} md={6}>
             <TextField
               fullWidth
-              label="Destinace"
+              label={t.destination}
               value={formData.destination}
               onChange={(e) => handleChange("destination", e.target.value)}
               required
@@ -102,7 +75,7 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
             <TextField
               fullWidth
               type="number"
-              label="Počet dní"
+              label={t.numberOfDays}
               value={formData.days}
               onChange={(e) => handleChange("days", Number(e.target.value))}
               inputProps={{ min: 1, max: 30 }}
@@ -112,15 +85,15 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
 
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
-              <InputLabel>Roční období</InputLabel>
+              <InputLabel>{t.season}</InputLabel>
               <Select
                 value={formData.preferences.season}
                 onChange={(e) =>
                   handleChange("preferences.season", e.target.value)
                 }
-                label="Roční období"
+                label={t.season}
               >
-                {FORM_OPTIONS.seasons.map(({ value, label }) => (
+                {Object.entries(t.seasons).map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {label}
                   </MenuItem>
@@ -131,15 +104,15 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
 
           <Grid item xs={12} md={6}>
             <FormControl fullWidth>
-              <InputLabel>Styl cestování</InputLabel>
+              <InputLabel>{t.travelStyle}</InputLabel>
               <Select
                 value={formData.preferences.travelStyle}
                 onChange={(e) =>
                   handleChange("preferences.travelStyle", e.target.value)
                 }
-                label="Styl cestování"
+                label={t.travelStyle}
               >
-                {FORM_OPTIONS.travelStyles.map(({ value, label }) => (
+                {Object.entries(t.travelStyles).map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {label}
                   </MenuItem>
@@ -150,16 +123,16 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
 
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel>Zájmy</InputLabel>
+              <InputLabel>{t.interests}</InputLabel>
               <Select
                 multiple
                 value={formData.preferences.interests}
                 onChange={(e) =>
                   handleChange("preferences.interests", e.target.value)
                 }
-                label="Zájmy"
+                label={t.interests}
               >
-                {FORM_OPTIONS.interests.map(({ value, label }) => (
+                {Object.entries(t.interestTypes).map(([value, label]) => (
                   <MenuItem key={value} value={value}>
                     {label}
                   </MenuItem>
@@ -174,7 +147,7 @@ const TripForm = ({ onSubmit }: TripFormProps) => {
           type="submit"
           className="bg-blue-600 hover:bg-blue-700 mt-4"
         >
-          Naplánovat cestu
+          {t.planTrip}
         </Button>
       </form>
     </Paper>

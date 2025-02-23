@@ -1,6 +1,4 @@
 export interface TripPreferences {
-  budget: number;
-  activityLevel: "relaxed" | "moderate" | "active";
   interests: string[];
   travelStyle: "budget" | "comfort" | "luxury";
   season: "spring" | "summer" | "autumn" | "winter";
